@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>unknows cheats — Neon Dashboard</title>
 
-  <!-- Optional web font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -20,10 +19,9 @@
       --shadow: 0 12px 40px rgba(2,6,23,0.75);
     }
 
-    /* Base */
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg-dark),#07020a);color:var(--text);-webkit-font-smoothing:antialiased}
-    body{overflow:hidden;font-weight:700} /* make text bold by default */
+    body{overflow:hidden;font-weight:800} /* bold text by default */
 
     /* animated background (black → purple glow) */
     .bg {
@@ -37,7 +35,6 @@
     }
     @keyframes bgShift { from { transform: scale(1) translateY(0) } to { transform: scale(1.03) translateY(-12px) } }
 
-    /* subtle grid */
     .grid {
       position:fixed;inset:0;z-index:-2;opacity:0.04;
       background-image:
@@ -47,7 +44,6 @@
       mix-blend-mode: overlay;
     }
 
-    /* App container */
     .app {
       display:flex;
       height:100vh;
@@ -70,7 +66,6 @@
       position:relative;
       overflow:hidden;
     }
-    /* neon rim (black→purple) */
     .login-card::before{
       content:"";
       position:absolute;inset:-2px;
@@ -82,7 +77,6 @@
       mix-blend-mode: screen;
     }
 
-    /* Brand */
     .brand { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
     .logo {
       width:48px; height:48px; border-radius:10px;
@@ -94,16 +88,14 @@
       font-size:18px;
       line-height:1;
       margin:0;
-      /* text gradient black → purple */
       background: linear-gradient(180deg,#000, var(--neon-end));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       font-weight:900;
     }
-    .subtitle { margin:4px 0 0; color:var(--muted); font-size:13px; font-weight:700 }
+    .subtitle { margin:4px 0 0; color:var(--muted); font-size:13px; font-weight:900 }
 
-    /* Inputs */
     .field { margin-bottom:12px }
     input[type="text"], input[type="email"], input[type="password"]{
       width:100%;
@@ -113,18 +105,17 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
       color:var(--text);
       font-size:14px;
-      font-weight:800;
+      font-weight:900;
       transition: box-shadow .14s, border-color .14s, transform .08s;
       outline:none;
     }
-    input::placeholder{ color: rgba(230,238,246,0.28); font-weight:700 }
+    input::placeholder{ color: rgba(230,238,246,0.28); font-weight:900 }
     input:focus{
       box-shadow: 0 0 28px rgba(123,44,255,0.12), 0 0 18px rgba(11,0,16,0.06);
       border-color: rgba(123,44,255,0.28);
       transform: translateY(-1px);
     }
 
-    /* Neon button (black→purple gradient) */
     .btn {
       width:100%;
       padding:12px;
@@ -138,7 +129,7 @@
       transition: transform .12s, filter .12s;
     }
     .btn:hover{ transform: translateY(-3px); filter:brightness(1.05) }
-    .muted { color:var(--muted); font-size:13px; margin-top:8px; text-align:center; font-weight:800 }
+    .muted { color:var(--muted); font-size:13px; margin-top:8px; text-align:center; font-weight:900 }
 
     /* Dashboard */
     .dashboard {
@@ -175,7 +166,7 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
       border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.02);
       box-shadow: 0 6px 20px rgba(2,6,23,0.6);
-      font-weight:800;
+      font-weight:900;
     }
 
     .badge { display:inline-block;padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,#000,var(--neon-end));color:#0b0010;font-weight:900 }
@@ -213,21 +204,7 @@
           <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
         </div>
 
-        <!-- Inline onclick ensures the button always responds even if script loading order is weird -->
-        <button id="loginBtn" class="btn" onclick="
-          (function(){
-            var u=document.getElementById('loginUsername').value.trim();
-            var e=document.getElementById('loginEmail').value.trim();
-            var p=document.getElementById('loginPassword').value.trim();
-            if(!u||!e||!p){ document.getElementById('loginError').textContent='Fill all fields'; return; }
-            try{ localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'})); }catch(err){}
-            document.getElementById('loginScreen').style.display='none';
-            var dash=document.getElementById('dashboard'); dash.style.display='flex'; dash.setAttribute('aria-hidden','false');
-            document.getElementById('usernameDisplay').textContent=u;
-            document.getElementById('emailDisplay').textContent=e;
-          })();
-        ">Let's go!</button>
-
+        <button id="loginBtn" class="btn" aria-label="Login">Let's go!</button>
         <div id="loginError" class="muted" aria-live="polite"></div>
       </div>
     </div>
@@ -267,7 +244,7 @@
         <section id="license" class="tab" style="display:none">
           <h2>Redeem License</h2>
           <form id="licenseForm" class="card" autocomplete="off">
-            <input id="licenseKey" type="text" placeholder="XXXXX-XXXXX-XXXXX" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);font-weight:800" />
+            <input id="licenseKey" type="text" placeholder="XXXXX-XXXXX-XXXXX" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);font-weight:900" />
             <div style="margin-top:12px;display:flex;gap:8px">
               <button type="submit" class="btn" style="flex:1">Activate Key</button>
               <button type="button" id="clearDataBtn" class="btn" style="background:linear-gradient(90deg,#2b002b,var(--neon-end));color:#fff">Clear Data</button>
@@ -286,31 +263,36 @@
   </div>
 
   <script>
-    // Robust JS to power the dashboard (runs after page load)
     (function(){
       const $ = id => document.getElementById(id);
-      const q = sel => document.querySelector(sel);
       const qa = sel => Array.from(document.querySelectorAll(sel));
       const safeParse = (s, fallback) => { try { return JSON.parse(s); } catch { return fallback; } };
 
-      // Elements
+      const loginBtn = $('loginBtn');
+      const loginError = $('loginError');
+      const usernameInput = $('loginUsername');
+      const emailInput = $('loginEmail');
+      const passwordInput = $('loginPassword');
+
       const dashboard = $('dashboard');
+      const usernameDisplay = $('usernameDisplay');
+      const emailDisplay = $('emailDisplay');
       const logoutBtn = $('logoutBtn');
       const importDemo = $('importDemo');
       const clearDataBtn = $('clearDataBtn');
+
       const navButtons = qa('.nav-btn');
       const tabs = qa('.tab');
+
       const licenseForm = $('licenseForm');
       const licenseKey = $('licenseKey');
       const licenseStatus = $('licenseStatus');
       const myLicenses = $('myLicenses');
       const productsContainer = $('productsContainer');
 
-      // State
       let profile = safeParse(localStorage.getItem('profile'), null);
       let licenses = safeParse(localStorage.getItem('licenses'), []);
 
-      // UI helpers
       function openTab(id){
         tabs.forEach(t => t.style.display = 'none');
         const el = document.getElementById(id);
@@ -347,7 +329,46 @@
       // Attach nav handlers
       navButtons.forEach(btn => btn.addEventListener('click', () => openTab(btn.dataset.tab)));
 
-      // License form
+      // Login
+      loginBtn.addEventListener('click', function(){
+        loginError.textContent = '';
+        const u = (usernameInput.value || '').trim();
+        const e = (emailInput.value || '').trim();
+        const p = (passwordInput.value || '').trim();
+        if(!u || !e || !p){ loginError.textContent = 'Fill all fields'; return; }
+        profile = { username: u, email: e, status: 'Active', referral: 'REF-'+Math.random().toString(36).slice(2,9).toUpperCase() };
+        try { localStorage.setItem('profile', JSON.stringify(profile)); } catch(e){}
+        usernameDisplay.textContent = profile.username;
+        emailDisplay.textContent = profile.email;
+        dashboard.style.display = 'flex';
+        dashboard.setAttribute('aria-hidden','false');
+        document.getElementById('loginScreen').style.display = 'none';
+        renderMyLicenses();
+        renderProducts();
+        openTab('user');
+      });
+
+      // Logout & clear
+      logoutBtn.addEventListener('click', function(){
+        profile = null;
+        try { localStorage.removeItem('profile'); } catch(e){}
+        document.getElementById('loginScreen').style.display = 'flex';
+        dashboard.style.display = 'none';
+        dashboard.setAttribute('aria-hidden','true');
+      });
+
+      if(clearDataBtn){
+        clearDataBtn.addEventListener('click', function(){
+          if(!confirm('Clear local data (profile + licenses)?')) return;
+          try { localStorage.removeItem('profile'); localStorage.removeItem('licenses'); } catch(e){}
+          profile = null; licenses = [];
+          myLicenses.innerHTML = 'No licenses yet.'; productsContainer.innerHTML = 'No products yet.';
+          document.getElementById('loginScreen').style.display = 'flex';
+          dashboard.style.display = 'none';
+          dashboard.setAttribute('aria-hidden','true');
+        });
+      }
+
       if(licenseForm){
         licenseForm.addEventListener('submit', function(e){
           e.preventDefault();
@@ -371,7 +392,6 @@
         });
       }
 
-      // Demo import
       if(importDemo){
         importDemo.addEventListener('click', function(){
           licenses = [
@@ -385,46 +405,10 @@
         });
       }
 
-      // Logout & clear
-      if(logoutBtn){
-        logoutBtn.addEventListener('click', function(){
-          profile = null;
-          try { localStorage.removeItem('profile'); } catch(e){}
-          document.getElementById('loginScreen').style.display='flex';
-          dashboard.style.display='none';
-          dashboard.setAttribute('aria-hidden','true');
-        });
-      }
-      if(clearDataBtn){
-        clearDataBtn.addEventListener('click', function(){
-          if(!confirm('Clear local data (profile + licenses)?')) return;
-          try { localStorage.removeItem('profile'); localStorage.removeItem('licenses'); } catch(e){}
-          profile = null; licenses = [];
-          myLicenses.innerHTML = 'No licenses yet.'; productsContainer.innerHTML = 'No products yet.';
-          document.getElementById('loginScreen').style.display='flex';
-          dashboard.style.display='none';
-          dashboard.setAttribute('aria-hidden','true');
-        });
-      }
-
-      // Auto-show if profile exists
-      if(profile && profile.username){
-        $('usernameDisplay').textContent = profile.username;
-        $('emailDisplay').textContent = profile.email || '';
-        dashboard.style.display='flex';
-        dashboard.setAttribute('aria-hidden','false');
-        renderMyLicenses();
-        renderProducts();
-        openTab('user');
-      } else {
-        // ensure login screen visible
-        document.getElementById('loginScreen').style.display='flex';
-        dashboard.style.display='none';
-        dashboard.setAttribute('aria-hidden','true');
-      }
-
-      // expose for debugging
-      window.__unknows = { profile, licenses, renderMyLicenses, renderProducts };
+      // Ensure login screen visible by default (no auto-login)
+      document.getElementById('loginScreen').style.display = 'flex';
+      dashboard.style.display = 'none';
+      dashboard.setAttribute('aria-hidden','true');
     })();
   </script>
 </body>

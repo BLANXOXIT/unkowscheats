@@ -3,52 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Neon Dashboard — Login</title>
+  <title>unknows cheats — Neon Dashboard</title>
 
-  <!-- Google font (optional) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- Optional web font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg-1:#05060a;
-      --bg-2:#0b0b12;
-      --panel:rgba(255,255,255,0.03);
-      --glass:rgba(255,255,255,0.03);
-      --muted:#9aa0a6;
-      --neon-pink:#ff4da6;
-      --neon-cyan:#00e5ff;
-      --neon-amber:#ffb86b;
+      --bg-dark:#050308;
+      --panel:rgba(255,255,255,0.02);
+      --glass-border:rgba(255,255,255,0.04);
+      --neon-start:#0b0010;   /* deep black-purple */
+      --neon-end:#7b2cff;     /* vivid purple */
+      --muted:rgba(230,238,246,0.45);
       --text:#e6eef6;
-      --glass-border:rgba(255,255,255,0.06);
-      --shadow: 0 10px 40px rgba(2,6,23,0.7);
+      --shadow: 0 12px 40px rgba(2,6,23,0.75);
     }
 
+    /* Base */
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(120deg,var(--bg-1),var(--bg-2));color:var(--text);-webkit-font-smoothing:antialiased}
-    body{overflow:hidden}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg-dark),#07020a);color:var(--text);-webkit-font-smoothing:antialiased}
+    body{overflow:hidden;font-weight:700} /* make text bold by default */
 
-    /* animated gradient background + subtle noise */
+    /* animated background (black → purple glow) */
     .bg {
-      position:fixed;inset:0;z-index:-2;
-      background: radial-gradient(600px 400px at 10% 20%, rgba(0,229,255,0.06), transparent 10%),
-                  radial-gradient(500px 300px at 90% 80%, rgba(255,77,166,0.06), transparent 12%),
-                  linear-gradient(120deg,#02030a 0%, #071026 50%, #0b0b12 100%);
-      animation: bgShift 12s linear infinite alternate;
-      filter: blur(10px) saturate(1.05);
+      position:fixed;inset:0;z-index:-3;
+      background:
+        radial-gradient(600px 400px at 10% 20%, rgba(123,44,255,0.06), transparent 10%),
+        radial-gradient(500px 300px at 90% 80%, rgba(11,0,16,0.06), transparent 12%),
+        linear-gradient(180deg,#020007 0%, #07020a 50%, #0b0010 100%);
+      animation: bgShift 14s ease-in-out infinite alternate;
+      filter: blur(8px) saturate(1.05);
     }
-    @keyframes bgShift { from { transform: scale(1) translateY(0) } to { transform: scale(1.03) translateY(-10px) } }
+    @keyframes bgShift { from { transform: scale(1) translateY(0) } to { transform: scale(1.03) translateY(-12px) } }
 
-    /* subtle grid lines (neon) */
+    /* subtle grid */
     .grid {
-      position:fixed;inset:0;z-index:-1;opacity:0.06;
+      position:fixed;inset:0;z-index:-2;opacity:0.04;
       background-image:
-        linear-gradient(transparent 95%, rgba(255,255,255,0.02) 95%),
-        linear-gradient(90deg, transparent 95%, rgba(255,255,255,0.02) 95%);
-      background-size: 120px 120px, 120px 120px;
+        linear-gradient(transparent 96%, rgba(255,255,255,0.02) 96%),
+        linear-gradient(90deg, transparent 96%, rgba(255,255,255,0.02) 96%);
+      background-size: 140px 140px, 140px 140px;
       mix-blend-mode: overlay;
     }
 
-    /* Layout */
+    /* App container */
     .app {
       display:flex;
       height:100vh;
@@ -58,91 +57,90 @@
       padding:28px;
     }
 
-    /* Centered login container */
-    .login-screen {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-    }
-
+    /* Login card */
+    .login-screen { display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
     .login-card {
       width:380px;
       padding:28px;
       border-radius:14px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border: 1px solid var(--glass-border);
+      border:1px solid var(--glass-border);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(8px) saturate(1.1);
+      backdrop-filter: blur(8px) saturate(1.05);
       position:relative;
       overflow:hidden;
     }
-
-    /* neon rim */
+    /* neon rim (black→purple) */
     .login-card::before{
       content:"";
       position:absolute;inset:-2px;
-      background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink),var(--neon-amber));
-      filter:blur(18px);
-      opacity:0.6;
+      background:linear-gradient(90deg,var(--neon-start),var(--neon-end));
+      filter:blur(18px) saturate(1.2);
+      opacity:0.9;
       z-index:-1;
-      transform:scale(1.06);
+      transform:scale(1.04);
+      mix-blend-mode: screen;
     }
 
-    .brand {
-      display:flex;align-items:center;gap:12px;margin-bottom:12px;
-    }
+    /* Brand */
+    .brand { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
     .logo {
-      width:44px;height:44px;border-radius:10px;
-      background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan));
-      box-shadow:0 6px 18px rgba(0,0,0,0.6), 0 0 18px rgba(0,229,255,0.12);
-      display:flex;align-items:center;justify-content:center;font-weight:800;color:#071026;
-      font-size:18px;
+      width:48px; height:48px; border-radius:10px;
+      background: linear-gradient(135deg,var(--neon-start),var(--neon-end));
+      box-shadow: 0 8px 30px rgba(123,44,255,0.18), 0 0 30px rgba(123,44,255,0.12);
+      display:flex;align-items:center;justify-content:center;font-weight:900;color:#0b0010;font-size:18px;
     }
-    h1{margin:0;font-size:18px;font-weight:700;letter-spacing:0.4px}
-    p.lead{margin:6px 0 18px;color:var(--muted);font-size:13px}
+    .title {
+      font-size:18px;
+      line-height:1;
+      margin:0;
+      /* text gradient black → purple */
+      background: linear-gradient(180deg,#000, var(--neon-end));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight:900;
+    }
+    .subtitle { margin:4px 0 0; color:var(--muted); font-size:13px; font-weight:700 }
 
     /* Inputs */
-    .field {margin-bottom:12px}
+    .field { margin-bottom:12px }
     input[type="text"], input[type="email"], input[type="password"]{
       width:100%;
       padding:12px 14px;
       border-radius:10px;
       border:1px solid rgba(255,255,255,0.04);
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
       color:var(--text);
       font-size:14px;
-      transition: box-shadow .18s, border-color .18s, transform .12s;
+      font-weight:800;
+      transition: box-shadow .14s, border-color .14s, transform .08s;
       outline:none;
     }
-    input::placeholder{color:rgba(230,238,246,0.35)}
+    input::placeholder{ color: rgba(230,238,246,0.28); font-weight:700 }
     input:focus{
-      box-shadow: 0 0 18px rgba(0,229,255,0.08), 0 0 28px rgba(255,77,166,0.04);
-      border-color: rgba(0,229,255,0.25);
+      box-shadow: 0 0 28px rgba(123,44,255,0.12), 0 0 18px rgba(11,0,16,0.06);
+      border-color: rgba(123,44,255,0.28);
       transform: translateY(-1px);
     }
 
-    /* Neon button */
+    /* Neon button (black→purple gradient) */
     .btn {
       width:100%;
       padding:12px;
       border-radius:10px;
       border:0;
-      font-weight:700;
+      font-weight:900;
       cursor:pointer;
-      color:#071026;
-      background:linear-gradient(90deg,var(--neon-amber),var(--neon-pink));
-      box-shadow: 0 8px 30px rgba(255,122,122,0.08), 0 0 28px rgba(255,77,166,0.12);
-      transition: transform .12s, box-shadow .12s, filter .12s;
+      color:#0b0010;
+      background: linear-gradient(90deg, #000, var(--neon-end));
+      box-shadow: 0 10px 40px rgba(123,44,255,0.12), 0 0 28px rgba(123,44,255,0.14);
+      transition: transform .12s, filter .12s;
     }
-    .btn:hover{ transform: translateY(-3px); filter:brightness(1.03) }
-    .btn:active{ transform: translateY(-1px) }
+    .btn:hover{ transform: translateY(-3px); filter:brightness(1.05) }
+    .muted { color:var(--muted); font-size:13px; margin-top:8px; text-align:center; font-weight:800 }
 
-    /* small muted text */
-    .muted { color:var(--muted); font-size:13px; margin-top:8px; text-align:center }
-
-    /* Dashboard layout */
+    /* Dashboard */
     .dashboard {
       display:flex;
       width:100%;
@@ -154,36 +152,34 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
       border:1px solid var(--glass-border);
     }
-
     .sidebar {
       width:260px;
       padding:22px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(255,255,255,0.01));
       border-right:1px solid rgba(255,255,255,0.02);
       display:flex;flex-direction:column;gap:12px;
     }
-    .sidebar h2{margin:0;color:var(--neon-cyan);font-size:20px}
+    .sidebar h2{
+      margin:0;color:var(--neon-end);font-size:20px;font-weight:900;
+      background: linear-gradient(180deg,#000,var(--neon-end));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
     .nav-btn {
-      display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:0;background:transparent;color:var(--text);cursor:pointer;
-      transition: background .12s, box-shadow .12s, transform .08s;
+      display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:0;background:transparent;color:var(--text);cursor:pointer;font-weight:900;
+      transition: background .12s, transform .08s;
     }
-    .nav-btn:hover{ background: linear-gradient(90deg, rgba(0,229,255,0.03), rgba(255,77,166,0.02)); transform: translateX(6px) }
-    .nav-btn.active{ box-shadow: 0 6px 20px rgba(0,229,255,0.06); border-left:4px solid var(--neon-cyan;); }
+    .nav-btn:hover{ background: linear-gradient(90deg, rgba(123,44,255,0.03), rgba(11,0,16,0.02)); transform: translateX(6px) }
 
-    .main {
-      flex:1;padding:28px;overflow:auto;
-      background: linear-gradient(180deg, rgba(255,255,255,0.005), rgba(255,255,255,0.002));
-    }
-
+    .main { flex:1;padding:28px;overflow:auto; }
     .card {
       background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
       border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.02);
       box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+      font-weight:800;
     }
 
-    .badge { display:inline-block;padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,var(--neon-amber),var(--neon-pink));color:#071026;font-weight:700 }
+    .badge { display:inline-block;padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,#000,var(--neon-end));color:#0b0010;font-weight:900 }
 
-    /* small responsive */
     @media (max-width:980px){
       .dashboard{flex-direction:column}
       .sidebar{width:100%;display:flex;flex-direction:row;overflow:auto}
@@ -200,10 +196,10 @@
     <div id="loginScreen" class="login-screen" role="dialog" aria-labelledby="loginTitle">
       <div class="login-card" role="form" aria-labelledby="loginTitle">
         <div class="brand">
-          <div class="logo">NG</div>
+          <div class="logo">UC</div>
           <div>
-            <h1>NeonGate</h1>
-            <p class="lead">Pro dashboard UI — neon edition</p>
+            <h1 class="title">unknows cheats</h1>
+            <div class="subtitle">Pro access • Neon black → purple</div>
           </div>
         </div>
 
@@ -217,15 +213,29 @@
           <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
         </div>
 
-        <button id="loginBtn" class="btn" aria-label="Login">Let's go!</button>
+        <!-- Inline onclick ensures the button always responds even if script loading order is weird -->
+        <button id="loginBtn" class="btn" onclick="
+          (function(){
+            var u=document.getElementById('loginUsername').value.trim();
+            var e=document.getElementById('loginEmail').value.trim();
+            var p=document.getElementById('loginPassword').value.trim();
+            if(!u||!e||!p){ document.getElementById('loginError').textContent='Fill all fields'; return; }
+            try{ localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'})); }catch(err){}
+            document.getElementById('loginScreen').style.display='none';
+            var dash=document.getElementById('dashboard'); dash.style.display='flex'; dash.setAttribute('aria-hidden','false');
+            document.getElementById('usernameDisplay').textContent=u;
+            document.getElementById('emailDisplay').textContent=e;
+          })();
+        ">Let's go!</button>
+
         <div id="loginError" class="muted" aria-live="polite"></div>
       </div>
     </div>
 
     <!-- DASHBOARD (hidden until login) -->
-    <div id="dashboard" class="dashboard hidden" role="application" aria-hidden="true" style="display:none">
+    <div id="dashboard" class="dashboard" role="application" aria-hidden="true" style="display:none">
       <aside class="sidebar" role="navigation" aria-label="Main">
-        <h2>NeonGate</h2>
+        <h2>unknows cheats</h2>
         <nav>
           <button class="nav-btn" data-tab="user">User</button>
           <button class="nav-btn" data-tab="products">Products</button>
@@ -233,7 +243,7 @@
           <button class="nav-btn" data-tab="news">News</button>
         </nav>
         <div style="flex:1"></div>
-        <div style="font-size:12px;color:var(--muted)">Built with glow • Local demo</div>
+        <div style="font-size:12px;color:var(--muted)">Neon theme • Local demo</div>
       </aside>
 
       <main class="main" role="main">
@@ -243,8 +253,8 @@
             <p><strong>Welcome</strong> <span id="usernameDisplay">—</span></p>
             <p><strong>Email</strong> <span id="emailDisplay">—</span></p>
             <div style="margin-top:12px;display:flex;gap:8px">
-              <button id="logoutBtn" class="btn" style="background:linear-gradient(90deg,var(--neon-pink),var(--neon-cyan));color:#071026">Logout</button>
-              <button id="importDemo" class="btn" style="background:linear-gradient(90deg,var(--neon-amber),var(--neon-pink));color:#071026">Import Demo Licenses</button>
+              <button id="logoutBtn" class="btn" style="background:linear-gradient(90deg,var(--neon-end),#000);color:#fff">Logout</button>
+              <button id="importDemo" class="btn" style="background:linear-gradient(90deg,#000,var(--neon-end));color:#0b0010">Import Demo</button>
             </div>
           </div>
         </section>
@@ -257,10 +267,10 @@
         <section id="license" class="tab" style="display:none">
           <h2>Redeem License</h2>
           <form id="licenseForm" class="card" autocomplete="off">
-            <input id="licenseKey" type="text" placeholder="XXXXX-XXXXX-XXXXX" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)" />
+            <input id="licenseKey" type="text" placeholder="XXXXX-XXXXX-XXXXX" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);font-weight:800" />
             <div style="margin-top:12px;display:flex;gap:8px">
               <button type="submit" class="btn" style="flex:1">Activate Key</button>
-              <button type="button" id="clearDataBtn" class="btn" style="background:linear-gradient(90deg,#ff6b6b,#ff4d4d);color:#fff">Clear Data</button>
+              <button type="button" id="clearDataBtn" class="btn" style="background:linear-gradient(90deg,#2b002b,var(--neon-end));color:#fff">Clear Data</button>
             </div>
             <div id="licenseStatus" class="muted" style="margin-top:10px"></div>
           </form>
@@ -276,52 +286,37 @@
   </div>
 
   <script>
-    // Neon dashboard JS (single-file, robust)
+    // Robust JS to power the dashboard (runs after page load)
     (function(){
-      // helpers
       const $ = id => document.getElementById(id);
       const q = sel => document.querySelector(sel);
       const qa = sel => Array.from(document.querySelectorAll(sel));
       const safeParse = (s, fallback) => { try { return JSON.parse(s); } catch { return fallback; } };
 
-      // elements
-      const loginScreen = $('loginScreen');
-      const loginBtn = $('loginBtn');
-      const loginError = $('loginError');
-      const usernameInput = $('loginUsername');
-      const emailInput = $('loginEmail');
-      const passwordInput = $('loginPassword');
-
+      // Elements
       const dashboard = $('dashboard');
-      const usernameDisplay = $('usernameDisplay');
-      const emailDisplay = $('emailDisplay');
       const logoutBtn = $('logoutBtn');
       const importDemo = $('importDemo');
       const clearDataBtn = $('clearDataBtn');
-
       const navButtons = qa('.nav-btn');
       const tabs = qa('.tab');
-
       const licenseForm = $('licenseForm');
       const licenseKey = $('licenseKey');
       const licenseStatus = $('licenseStatus');
       const myLicenses = $('myLicenses');
       const productsContainer = $('productsContainer');
 
-      // state
+      // State
       let profile = safeParse(localStorage.getItem('profile'), null);
       let licenses = safeParse(localStorage.getItem('licenses'), []);
 
       // UI helpers
-      function showLogin(){ loginScreen.style.display='flex'; dashboard.style.display='none'; dashboard.setAttribute('aria-hidden','true'); }
-      function showDashboard(){ loginScreen.style.display='none'; dashboard.style.display='flex'; dashboard.setAttribute('aria-hidden','false'); }
       function openTab(id){
         tabs.forEach(t => t.style.display = 'none');
         const el = document.getElementById(id);
         if(el) el.style.display = 'block';
       }
 
-      // renderers
       function renderMyLicenses(){
         myLicenses.innerHTML = '';
         if(!licenses || licenses.length === 0){ myLicenses.textContent = 'No licenses yet.'; return; }
@@ -329,7 +324,7 @@
           const d = document.createElement('div');
           d.className = 'card';
           d.style.marginBottom = '8px';
-          d.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>'+escapeHtml(l.product)+'</strong></div><div>'+(l.tier==='PRO'?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>')+'</div></div><div style="margin-top:8px"><strong>Key</strong>: '+escapeHtml(l.key)+'</div><div><strong>Status</strong>: '+escapeHtml(l.status)+'</div>';
+          d.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>'+escapeHtml(l.product)+'</strong></div><div>'+(l.tier==='PRO'?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:900">PRO</span>':'<span style="color:#0f0">FREE</span>')+'</div></div><div style="margin-top:8px"><strong>Key</strong>: '+escapeHtml(l.key)+'</div><div><strong>Status</strong>: '+escapeHtml(l.status)+'</div>';
           myLicenses.appendChild(d);
         });
       }
@@ -342,56 +337,20 @@
         Object.keys(byProduct).forEach(prod => {
           const items = byProduct[prod];
           const card = document.createElement('div'); card.className='card';
-          card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">'+escapeHtml(prod)+'</h3><div>'+(items.some(i=>i.tier==='PRO')?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>')+'</div></div><p><strong>Licenses:</strong> '+items.length+'</p>';
+          card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">'+escapeHtml(prod)+'</h3><div>'+(items.some(i=>i.tier==='PRO')?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:900">PRO</span>':'<span style="color:#0f0">FREE</span>')+'</div></div><p><strong>Licenses:</strong> '+items.length+'</p>';
           productsContainer.appendChild(card);
         });
       }
 
-      // small XSS-safe helper
       function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-      // login handler
-      loginBtn.addEventListener('click', function(){
-        loginError.textContent = '';
-        const u = (usernameInput.value || '').trim();
-        const e = (emailInput.value || '').trim();
-        const p = (passwordInput.value || '').trim();
-        if(!u || !e || !p){ loginError.textContent = 'Fill all fields'; return; }
-        profile = { username: u, email: e, status: 'Active', referral: 'REF-'+Math.random().toString(36).slice(2,9).toUpperCase() };
-        try { localStorage.setItem('profile', JSON.stringify(profile)); } catch(e){}
-        usernameDisplay.textContent = profile.username;
-        emailDisplay.textContent = profile.email;
-        showDashboard();
-        renderMyLicenses();
-        renderProducts();
-        openTab('user');
-      });
+      // Attach nav handlers
+      navButtons.forEach(btn => btn.addEventListener('click', () => openTab(btn.dataset.tab)));
 
-      // logout
-      logoutBtn.addEventListener('click', function(){
-        profile = null;
-        try { localStorage.removeItem('profile'); } catch(e){}
-        showLogin();
-      });
-
-      // clear data
-      clearDataBtn.addEventListener('click', function(){
-        if(!confirm('Clear local data (profile + licenses)?')) return;
-        try { localStorage.removeItem('profile'); localStorage.removeItem('licenses'); } catch(e){}
-        profile = null; licenses = [];
-        myLicenses.innerHTML = 'No licenses yet.'; productsContainer.innerHTML = 'No products yet.';
-        showLogin();
-      });
-
-      // nav buttons
-      navButtons.forEach(btn => btn.addEventListener('click', function(){
-        openTab(btn.dataset.tab);
-      }));
-
-      // license form
+      // License form
       if(licenseForm){
-        licenseForm.addEventListener('submit', function(ev){
-          ev.preventDefault();
+        licenseForm.addEventListener('submit', function(e){
+          e.preventDefault();
           const key = (licenseKey.value || '').trim();
           if(!key){ licenseStatus.textContent = 'Enter a key'; return; }
           const obj = {
@@ -412,32 +371,60 @@
         });
       }
 
-      // demo import
-      importDemo.addEventListener('click', function(){
-        licenses = [
-          { key:'PRO-NEON-001', product:'NeonSuite', status:'ACTIVE', created:'2026-03-01', author:'demo', tier:'PRO', features:['Aimbot','Wallhack'] },
-          { key:'FREE-NEON-000', product:'NeonSuite', status:'ACTIVE', created:'2026-02-20', author:'demo', tier:'FREE', features:['Basic features'] }
-        ];
-        try { localStorage.setItem('licenses', JSON.stringify(licenses)); } catch(e){}
-        renderMyLicenses();
-        renderProducts();
-        alert('Demo licenses imported');
-      });
+      // Demo import
+      if(importDemo){
+        importDemo.addEventListener('click', function(){
+          licenses = [
+            { key:'PRO-NEON-001', product:'NeonSuite', status:'ACTIVE', created:'2026-03-01', author:'demo', tier:'PRO', features:['Aimbot','Wallhack'] },
+            { key:'FREE-NEON-000', product:'NeonSuite', status:'ACTIVE', created:'2026-02-20', author:'demo', tier:'FREE', features:['Basic features'] }
+          ];
+          try { localStorage.setItem('licenses', JSON.stringify(licenses)); } catch(e){}
+          renderMyLicenses();
+          renderProducts();
+          alert('Demo licenses imported');
+        });
+      }
 
-      // initial UI state
+      // Logout & clear
+      if(logoutBtn){
+        logoutBtn.addEventListener('click', function(){
+          profile = null;
+          try { localStorage.removeItem('profile'); } catch(e){}
+          document.getElementById('loginScreen').style.display='flex';
+          dashboard.style.display='none';
+          dashboard.setAttribute('aria-hidden','true');
+        });
+      }
+      if(clearDataBtn){
+        clearDataBtn.addEventListener('click', function(){
+          if(!confirm('Clear local data (profile + licenses)?')) return;
+          try { localStorage.removeItem('profile'); localStorage.removeItem('licenses'); } catch(e){}
+          profile = null; licenses = [];
+          myLicenses.innerHTML = 'No licenses yet.'; productsContainer.innerHTML = 'No products yet.';
+          document.getElementById('loginScreen').style.display='flex';
+          dashboard.style.display='none';
+          dashboard.setAttribute('aria-hidden','true');
+        });
+      }
+
+      // Auto-show if profile exists
       if(profile && profile.username){
-        usernameDisplay.textContent = profile.username;
-        emailDisplay.textContent = profile.email || '';
-        showDashboard();
+        $('usernameDisplay').textContent = profile.username;
+        $('emailDisplay').textContent = profile.email || '';
+        dashboard.style.display='flex';
+        dashboard.setAttribute('aria-hidden','false');
         renderMyLicenses();
         renderProducts();
         openTab('user');
       } else {
-        showLogin();
+        // ensure login screen visible
+        document.getElementById('loginScreen').style.display='flex';
+        dashboard.style.display='none';
+        dashboard.setAttribute('aria-hidden','true');
       }
 
       // expose for debugging
-      window.__neon = { profile, licenses, renderMyLicenses, renderProducts };
+      window.__unknows = { profile, licenses, renderMyLicenses, renderProducts };
     })();
   </script>
 </body>

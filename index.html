@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Login</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Login then Dashboard Demo</title>
   <style>
     :root{--bg:#070708;--panel:#0f1113;--card:#141518;--muted:#9aa0a6;--accent:#ff7a7a;--text:#e6eef6}
-    html,body{height:100%;margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0b0d);color:var(--text)}
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0b0d);color:var(--text)}
     /* Centered login */
     #loginScreen{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px}
     .login-box{width:340px;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);text-align:center}
@@ -16,19 +15,18 @@
     .primary{background:linear-gradient(90deg,#ffb86b,#ff7a7a);border:0;color:#0b0b0d;padding:10px 12px;border-radius:8px;cursor:pointer}
     .muted{color:var(--muted);font-size:13px;margin-top:8px}
     .hidden{display:none}
-    /* Dashboard layout */
+    /* Dashboard */
     #dashboard{display:flex;min-height:100vh}
     .sidebar{width:220px;padding:20px;background:var(--panel);box-shadow:2px 0 30px rgba(0,0,0,.6)}
     .sidebar h2{margin:0 0 18px;font-size:18px}
     .sidebar nav button{display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:0;background:#111;color:var(--text);text-align:left;cursor:pointer}
     .main{flex:1;padding:28px;overflow:auto}
     .card{background:var(--card);padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.4)}
-    @media (max-width:900px){.sidebar{display:none}.main{padding:16px}}
   </style>
 </head>
 <body>
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="screen" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <!-- LOGIN -->
+  <div id="loginScreen" role="dialog" aria-labelledby="loginTitle">
     <div class="login-box" role="form" aria-labelledby="loginTitle">
       <h2 id="loginTitle">Login</h2>
       <input id="loginUsername" type="text" placeholder="Username" autocomplete="username" />
@@ -47,9 +45,6 @@
         <button data-tab="user">User</button>
         <button data-tab="products">Products</button>
         <button data-tab="license">Use Key</button>
-        <button data-tab="news">News</button>
-        <button data-tab="social">Social</button>
-        <button data-tab="referral">Referral</button>
       </nav>
     </aside>
 
@@ -66,7 +61,7 @@
 
       <section id="products" class="tab hidden">
         <h2>Your Products</h2>
-        <div id="productsContainer"></div>
+        <div id="productsContainer" class="card">No products yet.</div>
       </section>
 
       <section id="license" class="tab hidden">
@@ -76,184 +71,85 @@
           <button type="submit" class="primary">Activate Key</button>
           <div id="licenseStatus" class="muted"></div>
         </form>
-        <div class="card"><h3>My Licenses</h3><div id="myLicenses"></div></div>
       </section>
-
-      <section id="news" class="tab hidden"><h2>Latest News</h2><div id="newsContainer"></div></section>
-      <section id="social" class="tab hidden"><h2>Social</h2><div class="card">Links</div></section>
-      <section id="referral" class="tab hidden"><h2>Referral</h2><div class="card">Code: <strong id="referralCode">—</strong></div></section>
     </main>
   </div>
 
-  <!-- Inline script ensures it runs after DOM is ready -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Elements
+    // This script waits for DOM and logs everything so you can see what's happening
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOM ready');
+
+      const ids = ['loginBtn','loginUsername','loginEmail','loginPassword','loginScreen','dashboard','usernameDisplay','emailDisplay','logoutBtn'];
+      const exist = ids.map(id => [id, !!document.getElementById(id)]);
+      console.log('Element existence check:', exist);
+
+      const loginBtn = document.getElementById('loginBtn');
       const loginScreen = document.getElementById('loginScreen');
       const dashboard = document.getElementById('dashboard');
-      const loginBtn = document.getElementById('loginBtn');
-      const loginError = document.getElementById('loginError');
       const usernameInput = document.getElementById('loginUsername');
       const emailInput = document.getElementById('loginEmail');
       const passwordInput = document.getElementById('loginPassword');
-
       const usernameDisplay = document.getElementById('usernameDisplay');
       const emailDisplay = document.getElementById('emailDisplay');
       const logoutBtn = document.getElementById('logoutBtn');
 
-      const sidebarButtons = document.querySelectorAll('.sidebar nav button');
-      const tabs = document.querySelectorAll('.tab');
-
-      const licenseForm = document.getElementById('licenseForm');
-      const licenseStatus = document.getElementById('licenseStatus');
-      const myLicenses = document.getElementById('myLicenses');
-      const productsContainer = document.getElementById('productsContainer');
-      const referralCodeEl = document.getElementById('referralCode');
-
-      // State
-      let profile = load('profile', null);
-      let licenses = load('licenses', []);
-
-      // If already logged in, show dashboard
-      if (profile && profile.username) {
-        showDashboard(profile);
-      } else {
-        showLogin();
+      if (!loginBtn) {
+        console.error('loginBtn not found. Check HTML ids and that this file is the one loaded.');
+        return;
       }
 
-      // Attach handlers
-      loginBtn.addEventListener('click', handleLogin);
-      logoutBtn.addEventListener('click', handleLogout);
-      sidebarButtons.forEach(btn => btn.addEventListener('click', () => openTab(btn.dataset.tab)));
-      if (licenseForm) licenseForm.addEventListener('submit', handleLicense);
-
-      // Functions
-      function load(key, fallback) {
-        try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
-      }
-      function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-      function handleLogin() {
-        loginError.textContent = '';
+      // Attach handler and confirm in console
+      loginBtn.addEventListener('click', function () {
+        console.log('loginBtn clicked');
         const u = usernameInput.value.trim();
         const e = emailInput.value.trim();
         const p = passwordInput.value.trim();
+        console.log('input values', {u,e,p});
         if (!u || !e || !p) {
-          loginError.textContent = 'Fill all fields';
+          document.getElementById('loginError').textContent = 'Fill all fields';
+          console.warn('Missing fields');
           return;
         }
-        profile = { username: u, email: e, status: 'Active', referral: 'REF-' + Math.random().toString(36).slice(2,9).toUpperCase() };
-        save('profile', profile);
-        showDashboard(profile);
-      }
-
-      function showDashboard(profileObj) {
+        // Save profile and show dashboard
+        try { localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'})); } catch (err) { console.warn('localStorage failed', err); }
         loginScreen.classList.add('hidden');
         dashboard.classList.remove('hidden');
-        dashboard.setAttribute('aria-hidden', 'false');
-        usernameDisplay.textContent = profileObj.username || '—';
-        emailDisplay.textContent = profileObj.email || '—';
-        referralCodeEl.textContent = profileObj.referral || '—';
-        renderMyLicenses();
-        renderProducts();
-        openTab('user');
-      }
+        dashboard.setAttribute('aria-hidden','false');
+        usernameDisplay.textContent = u;
+        emailDisplay.textContent = e;
+        console.log('Dashboard shown');
+      });
 
-      function showLogin() {
-        loginScreen.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-        dashboard.setAttribute('aria-hidden', 'true');
-      }
-
-      function handleLogout() {
+      // Logout
+      logoutBtn.addEventListener('click', function () {
+        console.log('logout clicked');
         localStorage.removeItem('profile');
-        profile = null;
-        showLogin();
-      }
+        dashboard.classList.add('hidden');
+        loginScreen.classList.remove('hidden');
+      });
 
-      function openTab(id) {
-        tabs.forEach(t => t.classList.add('hidden'));
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('hidden');
-      }
-
-      function handleLicense(e) {
-        e.preventDefault();
-        const key = document.getElementById('licenseKey').value.trim();
-        if (!key) { licenseStatus.textContent = 'Enter a key'; return; }
-        const licenseObj = {
-          key,
-          product: 'Unknown',
-          status: 'ACTIVE',
-          created: new Date().toISOString().split('T')[0],
-          author: (profile && profile.username) || 'guest',
-          tier: /PRO/i.test(key) ? 'PRO' : 'FREE',
-          features: /PRO/i.test(key) ? ['Aimbot (fast)','Wallhack','Custom UI'] : ['Basic features']
-        };
-        licenses.unshift(licenseObj);
-        save('licenses', licenses);
-        licenseStatus.textContent = `✅ Stored locally (${licenseObj.tier})`;
-        renderMyLicenses();
-        renderProducts();
-        licenseForm.reset();
-      }
-
-      function renderMyLicenses() {
-        myLicenses.innerHTML = '';
-        if (!licenses || licenses.length === 0) { myLicenses.textContent = 'No licenses yet.'; return; }
-        licenses.forEach(l => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div><strong>${l.product}</strong></div>
-              <div>${l.tier === 'PRO' ? '<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>' : '<span style="color:#0f0">FREE</span>'}</div>
-            </div>
-            <div><strong>Key</strong>: ${l.key}</div>
-            <div><strong>Status</strong>: ${l.status}</div>
-            <div><strong>Created</strong>: ${l.created}</div>
-            <div style="margin-top:8px;"><strong>Features</strong><ul>${(l.features||[]).map(f=>`<li>${f}</li>`).join('')}</ul></div>
-            <div style="margin-top:8px;"><button class="revoke">Revoke</button></div>
-          `;
-          card.querySelector('.revoke').addEventListener('click', () => {
-            if (!confirm('Revoke license locally?')) return;
-            licenses = licenses.filter(x => x.key !== l.key);
-            save('licenses', licenses);
-            renderMyLicenses();
-            renderProducts();
-          });
-          myLicenses.appendChild(card);
+      // Simple tab switching
+      document.querySelectorAll('.sidebar nav button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+          const id = btn.dataset.tab;
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('hidden');
         });
-      }
+      });
 
-      function renderProducts() {
-        productsContainer.innerHTML = '';
-        if (!licenses || licenses.length === 0) { productsContainer.innerHTML = '<div class="card">No active products. Redeem a license in Use Key.</div>'; return; }
-        const byProduct = {};
-        licenses.forEach(l => { const p = l.product || 'Unknown'; (byProduct[p] = byProduct[p] || []).push(l); });
-        Object.keys(byProduct).forEach(prod => {
-          const items = byProduct[prod];
-          const isPro = items.some(i => i.tier === 'PRO');
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.style.border = isPro ? '2px solid #ffd700' : '';
-          card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${prod}</h3>${isPro?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>'}</div><p><strong>Licenses:</strong> ${items.length}</p><div id="list-${prod.replace(/\s+/g,'_')}" style="margin-top:8px"></div>`;
-          productsContainer.appendChild(card);
-          const listDiv = card.querySelector(`#list-${prod.replace(/\s+/g,'_')}`);
-          items.forEach(i => {
-            const row = document.createElement('div');
-            row.style.margin = '8px 0';
-            row.innerHTML = `<div><strong>Key:</strong> ${i.key}</div><div><strong>Status:</strong> ${i.status}</div><div><strong>Activated:</strong> ${i.created}</div>`;
-            if (i.tier === 'PRO') {
-              const feat = document.createElement('div');
-              feat.style.marginTop = '6px';
-              feat.innerHTML = `<strong style="color:#ffd700">PRO Features</strong><ul>${(i.features||[]).map(f=>`<li>${f}</li>`).join('')}</ul>`;
-              row.appendChild(feat);
-            }
-            listDiv.appendChild(row);
-          });
-        });
-      }
+      // Auto-show dashboard if profile exists
+      try {
+        const stored = JSON.parse(localStorage.getItem('profile') || 'null');
+        if (stored && stored.username) {
+          console.log('Found stored profile, auto-showing dashboard for', stored.username);
+          usernameDisplay.textContent = stored.username;
+          emailDisplay.textContent = stored.email || '';
+          loginScreen.classList.add('hidden');
+          dashboard.classList.remove('hidden');
+        }
+      } catch (err) { console.warn('Error reading stored profile', err); }
     });
   </script>
 </body>

@@ -2,336 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Blanco</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <title>Dashboard Login</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* Minimal inline styles to ensure layout works if CSS missing */
-    :root{--bg:#0b0b0d;--card:#0f1113;--muted:#9aa0a6;--accent:#ffb86b}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
-    body{background:linear-gradient(180deg,#070708 0%, #0b0b0d 100%);color:#e6eef6;display:flex}
-    .sidebar{width:220px;padding:20px;background:linear-gradient(180deg,#070708,#0b0b0d);box-shadow:2px 0 30px rgba(0,0,0,.6)}
-    .sidebar h2{margin:0 0 18px;font-size:20px;letter-spacing:0.6px}
-    .sidebar button{display:block;width:100%;margin:8px 0;padding:10px;border:0;border-radius:8px;background:#111;color:#ddd;cursor:pointer;text-align:left}
-    .main{flex:1;padding:28px;overflow:auto}
-    .tab{max-width:980px}
-    .card{background:var(--card);padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.6)}
-    input,select{width:100%;padding:10px;margin-top:6px;margin-bottom:10px;border-radius:8px;border:1px solid #222;background:#0b0b0d;color:#e6eef6}
-    button.primary{background:linear-gradient(90deg,#ffb86b,#ff7a7a);border:0;color:#0b0b0d;padding:10px 14px;border-radius:8px;cursor:pointer}
-    .small{font-size:13px;color:var(--muted)}
-    .flex{display:flex;gap:10px;align-items:center}
-    .right{margin-left:auto}
-    pre{background:#0a0a0b;padding:8px;border-radius:6px;color:#cfe8ff;overflow:auto}
-    @media (max-width:800px){.sidebar{display:none}body{padding:12px}}
+    body { margin:0; font-family:Arial, sans-serif; background:#0b0b0d; color:#eee; }
+    .login-container { display:flex; justify-content:center; align-items:center; height:100vh; }
+    .login-box { background:#111; padding:30px; border-radius:10px; width:300px; box-shadow:0 0 20px rgba(0,0,0,.6); }
+    .login-box h2 { margin-top:0; text-align:center; }
+    .login-box input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #333; background:#0b0b0d; color:#eee; }
+    .login-box button { width:100%; padding:10px; margin-top:12px; border:0; border-radius:6px; background:#ff7a7a; color:#fff; cursor:pointer; }
+    .hidden { display:none; }
+    .sidebar { width:220px; padding:20px; background:#111; height:100vh; float:left; }
+    .sidebar h2 { margin:0 0 18px; }
+    .sidebar button { display:block; width:100%; margin:8px 0; padding:10px; border:0; border-radius:8px; background:#222; color:#ddd; cursor:pointer; text-align:left; }
+    .main { margin-left:240px; padding:20px; }
+    .card { background:#1a1a1a; padding:14px; border-radius:10px; margin-bottom:12px; }
   </style>
 </head>
 <body>
-  <div class="sidebar" role="navigation" aria-label="Main navigation">
-    <h2>Blanco</h2>
-    <button onclick="showTab('user')">User</button>
-    <button onclick="showTab('products')">Products</button>
-    <button onclick="showTab('license')">Use Key</button>
-    <button onclick="showTab('news')">News</button>
-    <button onclick="showTab('social')">Social</button>
-    <button onclick="showTab('referral')">Referral</button>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <input type="text" id="loginUsername" placeholder="Username" required />
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button id="loginBtn">Let's go!</button>
+    </div>
   </div>
 
-  <div class="main">
-    <!-- USER TAB -->
-    <div id="user" class="tab" role="region" aria-label="User profile">
-      <h2>User Profile</h2>
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="dashboard" class="hidden">
+    <div class="sidebar">
+      <h2>Yeageth</h2>
+      <button onclick="showTab('user')">User</button>
+      <button onclick="showTab('products')">Products</button>
+      <button onclick="showTab('license')">Use Key</button>
+      <button onclick="showTab('news')">News</button>
+      <button onclick="showTab('social')">Social</button>
+      <button onclick="showTab('referral')">Referral</button>
+    </div>
 
-      <div class="card" aria-hidden="false">
-        <label><strong>Username</strong></label>
-        <input id="inputUsername" placeholder="Enter username" autocomplete="username" />
-        <label><strong>Email</strong></label>
-        <input id="inputEmail" placeholder="Enter email" type="email" autocomplete="email" />
-        <div style="text-align:center; margin-top:10px;">
-          <button id="saveProfileBtn" class="primary">Save Profile</button>
+    <div class="main">
+      <!-- USER TAB -->
+      <div id="user" class="tab">
+        <h2>User Profile</h2>
+        <div class="card">
+          <p><strong>Welcome</strong> <span id="usernameDisplay">—</span></p>
+          <p><strong>Email</strong> <span id="emailDisplay">—</span></p>
+          <p><strong>Status</strong> Active</p>
+          <button id="logoutBtn">Logout</button>
         </div>
       </div>
 
-      <div class="card" id="profileDisplay" style="margin-top:20px;">
-        <h3>Profile</h3>
-        <p><strong>Welcome</strong> <span id="usernameDisplay">—</span></p>
-        <p><strong>Email</strong> <span id="emailDisplay">—</span></p>
-        <p><strong>HWID</strong> <span id="hwidDisplay">Not Set</span></p>
-        <p><strong>Status</strong> <span id="statusDisplay">Inactive</span></p>
-        <div class="flex" style="margin-top:12px;">
-          <button id="resetHwidBtn">Reset HWID</button>
-          <button id="changePassBtn">Change Password</button>
-          <button id="logoutBtn" style="margin-left:auto;background:#ff6b6b;color:#fff;border:0;padding:8px 12px;border-radius:8px">Logout</button>
-        </div>
+      <!-- PRODUCTS TAB -->
+      <div id="products" class="tab" style="display:none;">
+        <h2>Your Products</h2>
+        <div id="productsContainer"></div>
       </div>
-    </div>
 
-    <!-- PRODUCTS TAB -->
-    <div id="products" class="tab" style="display:none;" role="region" aria-label="Products">
-      <h2>Your Products</h2>
-      <div id="productsContainer"></div>
-    </div>
-
-    <!-- LICENSE TAB -->
-    <div id="license" class="tab" style="display:none;" role="region" aria-label="License">
-      <h2>Redeem License</h2>
-
-      <div class="card">
+      <!-- LICENSE TAB -->
+      <div id="license" class="tab" style="display:none;">
+        <h2>Redeem License</h2>
         <form id="licenseForm">
-          <label><strong>License Key</strong></label>
-          <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX" required autocomplete="off" />
-          <label><strong>Product (optional)</strong></label>
-          <input type="text" id="licenseProduct" placeholder="Product name (e.g. CS2-ESP)" />
-          <label><strong>Tier</strong></label>
-          <select id="licenseTier">
-            <option value="FREE">FREE</option>
-            <option value="PRO">PRO</option>
-          </select>
-          <div style="text-align:center; margin-top:10px;">
-            <button type="submit" class="primary">Activate Key</button>
-          </div>
+          <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX" required />
+          <button type="submit">Activate Key</button>
         </form>
-        <div id="licenseStatus" style="margin-top:12px;" class="small"></div>
+        <div id="licenseStatus"></div>
       </div>
 
-      <div class="card" style="margin-top:16px;">
-        <h3>My Licenses</h3>
-        <div id="myLicenses"></div>
+      <!-- NEWS TAB -->
+      <div id="news" class="tab" style="display:none;">
+        <h2>Latest News</h2>
+        <div id="newsContainer"></div>
       </div>
-    </div>
 
-    <!-- NEWS TAB -->
-    <div id="news" class="tab" style="display:none;" role="region" aria-label="News">
-      <h2>Latest News</h2>
-      <div id="newsContainer"></div>
-    </div>
-
-    <!-- SOCIAL TAB -->
-    <div id="social" class="tab" style="display:none;" role="region" aria-label="Social">
-      <h2>Social</h2>
-      <div class="card">
-        <p>Discord: <a id="discordLink" href="#" target="_blank" rel="noopener">Join</a></p>
-        <p>Twitter: <a id="twitterLink" href="#" target="_blank" rel="noopener">@handle</a></p>
+      <!-- SOCIAL TAB -->
+      <div id="social" class="tab" style="display:none;">
+        <h2>Social</h2>
+        <p>Links to Discord, Twitter, etc.</p>
       </div>
-    </div>
 
-    <!-- REFERRAL TAB -->
-    <div id="referral" class="tab" style="display:none;" role="region" aria-label="Referral">
-      <h2>Referral</h2>
-      <div class="card">
-        <p>Your referral code: <strong id="referralCode">—</strong></p>
-        <button id="copyReferral">Copy</button>
+      <!-- REFERRAL TAB -->
+      <div id="referral" class="tab" style="display:none;">
+        <h2>Referral</h2>
+        <p>Your referral code: <span id="referralCode">—</span></p>
       </div>
     </div>
   </div>
 
   <script>
-    // Minimal loader: if you have external app.js, it will override these functions.
-    // This inline script ensures the page works immediately if assets/js/app.js is missing.
-    (function(){
-      // ====== CONFIG ======
-      const useKeyAuthClient = false;
-      const appName = "";
-      const ownerId = "";
-      const appSecret = "";
+    // Login logic
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const u = document.getElementById('loginUsername').value.trim();
+      const e = document.getElementById('loginEmail').value.trim();
+      const p = document.getElementById('loginPassword').value.trim();
+      if(!u || !e || !p){ alert('Fill all fields'); return; }
+      // Save user info locally
+      localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'}));
+      // Hide login, show dashboard
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      // Show user info
+      document.getElementById('usernameDisplay').textContent = u;
+      document.getElementById('emailDisplay').textContent = e;
+      showTab('user');
+    });
 
-      // ====== UTILITIES ======
-      function qs(id){return document.getElementById(id)}
-      function saveLocal(k,v){localStorage.setItem(k,JSON.stringify(v))}
-      function loadLocal(k,fb){const v=localStorage.getItem(k);return v?JSON.parse(v):fb}
+    // Tab switching
+    function showTab(tabId){
+      document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
+      document.getElementById(tabId).style.display='block';
+    }
 
-      // ====== STATE ======
-      const profile = loadLocal('profile',{username:'blanco',email:'abdouthegoat06@gmail.com',hwid:'Not Set',status:'Active',referral:'REF-'+Math.random().toString(36).slice(2,9).toUpperCase()})
-      let licenses = loadLocal('licenses',[])
-      let newsItems = loadLocal('news',[{title:'Welcome',date:new Date().toISOString().split('T')[0],author:'system',text:'No news yet.'}])
-
-      // ====== TABS ======
-      function showTab(tabId){
-        document.querySelectorAll('.tab').forEach(t=>t.style.display='none')
-        const el = qs(tabId); if(el) el.style.display='block'
-        if(tabId==='news') loadNews()
-        if(tabId==='products') renderProducts()
-        if(tabId==='license') renderMyLicenses()
-      }
-      window.showTab = showTab
-      showTab('user')
-
-      // ====== PROFILE ======
-      function renderProfile(){
-        qs('usernameDisplay').textContent = profile.username || '—'
-        qs('emailDisplay').textContent = profile.email || '—'
-        qs('hwidDisplay').textContent = profile.hwid || 'Not Set'
-        qs('statusDisplay').textContent = profile.status || 'Inactive'
-        qs('referralCode').textContent = profile.referral || '—'
-        qs('inputUsername').value = profile.username || ''
-        qs('inputEmail').value = profile.email || ''
-      }
-      renderProfile()
-
-      qs('saveProfileBtn').addEventListener('click', ()=>{
-        const u = qs('inputUsername').value.trim()
-        const e = qs('inputEmail').value.trim()
-        if(u) profile.username = u
-        if(e) profile.email = e
-        saveLocal('profile',profile)
-        renderProfile()
-        alert('Profile saved.')
-      })
-
-      qs('resetHwidBtn').addEventListener('click', ()=>{
-        profile.hwid = 'Not Set'
-        saveLocal('profile',profile)
-        renderProfile()
-      })
-
-      qs('logoutBtn').addEventListener('click', ()=>{
-        localStorage.removeItem('profile')
-        localStorage.removeItem('licenses')
-        alert('Logged out (local). Refresh to reset.')
-      })
-
-      // ====== PRODUCTS ======
-      function renderProducts(){
-        const container = qs('productsContainer'); container.innerHTML = ''
-        if(licenses.length===0){ container.innerHTML = '<div class="card">No active products. Redeem a license in the Use Key tab.</div>'; return }
-        const byProduct = {}
-        licenses.forEach(l=>{ const p = l.product||'Unknown'; if(!byProduct[p]) byProduct[p]=[]; byProduct[p].push(l) })
-        Object.keys(byProduct).forEach(productName=>{
-          const items = byProduct[productName]
-          const isPro = items.some(i=> (i.tier||'').toUpperCase()==='PRO')
-          const card = document.createElement('div'); card.className='card'
-          card.style.border = isPro ? '2px solid #ffd700' : ''
-          card.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <h3 style="margin:0">${productName}</h3>
-              ${isPro?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>'}
-            </div>
-            <p><strong>Licenses:</strong> ${items.length}</p>
-            <div id="prod-${productName.replace(/\s+/g,'_')}"></div>
-          `
-          container.appendChild(card)
-          const listDiv = card.querySelector(`#prod-${productName.replace(/\s+/g,'_')}`)
-          items.forEach(i=>{
-            const row = document.createElement('div'); row.style.margin='8px 0'
-            const featuresHtml = (i.tier && i.tier.toUpperCase()==='PRO') ? `
-              <div style="margin-top:6px;padding:8px;background:linear-gradient(90deg,#111,#222);border-radius:6px;">
-                <strong style="color:#ffd700">PRO Features</strong>
-                <ul style="margin:6px 0 0 18px;color:#ddd">
-                  ${(i.features||['Aimbot (fast)','Wallhack (through walls)','Custom UI']).map(f=>`<li>${f}</li>`).join('')}
-                </ul>
-              </div>` : ''
-            row.innerHTML = `
-              <div><strong>Key:</strong> ${i.key}</div>
-              <div><strong>Status:</strong> ${i.status}</div>
-              <div><strong>Activated:</strong> ${i.created||'—'}</div>
-              ${featuresHtml}
-              <div style="margin-top:6px;">
-                <button onclick="alert('Download for ${productName} would start (implement link).')">Download</button>
-                ${i.ui?`<button onclick="window.open('${i.ui}','_blank')">UI</button>`:''}
-              </div>
-              <hr/>
-            `
-            listDiv.appendChild(row)
-          })
-        })
-      }
-      window.renderProducts = renderProducts
-
-      // ====== LICENSE ACTIVATION ======
-      qs('licenseForm').addEventListener('submit', async (e)=>{
-        e.preventDefault()
-        const key = qs('licenseKey').value.trim()
-        const product = qs('licenseProduct').value.trim() || 'Unknown'
-        let tier = qs('licenseTier').value || 'FREE'
-        const user = profile.username || 'guest'
-        if(!key){ qs('licenseStatus').textContent = 'Please enter a license key.'; return }
-        qs('licenseStatus').textContent = 'Processing...'
-        if(/PRO/i.test(key)) tier = 'PRO'
-        if(useKeyAuthClient && appName && ownerId && appSecret){
-          try{
-            const url = `https://keyauth.win/api/1.3/?type=activate&name=${encodeURIComponent(appName)}&ownerid=${encodeURIComponent(ownerId)}&secret=${encodeURIComponent(appSecret)}&key=${encodeURIComponent(key)}&user=${encodeURIComponent(user)}`
-            const res = await fetch(url)
-            const data = await res.json()
-            const licenseObj = {
-              key, product, tier,
-              status: data.success ? 'ACTIVE' : 'INVALID',
-              created: new Date().toISOString().split('T')[0],
-              author: user, raw: data,
-              features: data.success && data.item && data.item.features ? data.item.features : (tier==='PRO'?['Aimbot (fast)','Wallhack (through walls)','Custom UI']:['Basic features'])
-            }
-            licenses.unshift(licenseObj); saveLocal('licenses',licenses)
-            qs('licenseStatus').textContent = data.success ? '✅ License activated' : '❌ ' + (data.message||'Activation failed')
-            renderMyLicenses(); renderProducts()
-          }catch(err){ qs('licenseStatus').textContent = '⚠️ Activation error.' }
-          return
-        }
-        // fallback local activation
-        const licenseObj = { key, product, tier, status:'ACTIVE', created:new Date().toISOString().split('T')[0], author:user, note:'Activated locally (no KeyAuth)', features: tier==='PRO'?['Aimbot (fast)','Wallhack (through walls)','Custom UI']:['Basic features'] }
-        licenses.unshift(licenseObj); saveLocal('licenses',licenses)
-        qs('licenseStatus').innerHTML = `✅ License stored locally for <strong>${product}</strong> (${tier}).`
-        renderMyLicenses(); renderProducts()
-      })
-
-      // ====== RENDER MY LICENSES ======
-      function renderMyLicenses(){
-        const container = qs('myLicenses'); container.innerHTML = ''
-        if(licenses.length===0){ container.innerHTML = '<div>No licenses yet.</div>'; return }
-        licenses.forEach(l=>{
-          const div = document.createElement('div'); div.className='card'; div.style.marginBottom='8px'
-          div.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div><strong>${l.product||'—'}</strong></div>
-              <div>${(l.tier==='PRO')?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>'}</div>
-            </div>
-            <div><strong>Key</strong>: ${l.key}</div>
-            <div><strong>Status</strong>: ${l.status||'—'}</div>
-            <div><strong>Created</strong>: ${l.created||'—'}</div>
-            <div><strong>Author/User</strong>: ${l.author||profile.username||'—'}</div>
-            <div style="margin-top:8px;">
-              <button onclick="revokeLicense('${l.key}')">Revoke (local)</button>
-            </div>
-            ${l.features?`<div style="margin-top:8px;"><strong>Features</strong><ul style="margin:6px 0 0 18px;color:#ddd">${l.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>`:''}
-            ${l.raw?`<pre style="margin-top:8px; white-space:pre-wrap; max-height:120px; overflow:auto;">${JSON.stringify(l.raw,null,2)}</pre>`:''}
-          `
-          container.appendChild(div)
-        })
-      }
-      window.renderMyLicenses = renderMyLicenses
-
-      function revokeLicense(key){
-        if(!confirm('Revoke license locally?')) return
-        licenses = licenses.filter(l=>l.key!==key); saveLocal('licenses',licenses)
-        renderMyLicenses(); renderProducts()
-      }
-      window.revokeLicense = revokeLicense
-
-      // ====== NEWS ======
-      async function loadNews(){
-        const container = qs('newsContainer'); container.innerHTML = 'Loading news...'
-        try{
-          const res = await fetch('news.json',{cache:'no-store'})
-          if(res.ok){ const data = await res.json(); newsItems = data; saveLocal('news',newsItems) } else { newsItems = loadLocal('news',newsItems) }
-        }catch(err){ newsItems = loadLocal('news',newsItems) }
-        container.innerHTML = ''
-        newsItems.forEach(item=>{
-          const card = document.createElement('div'); card.className='card'
-          card.innerHTML = `<h3>${item.title}</h3><p class="small"><em>${item.date} — ${item.author}</em></p><p>${item.text}</p>`
-          container.appendChild(card)
-        })
-      }
-      window.loadNews = loadNews
-
-      // ====== SOCIAL & REFERRAL ======
-      qs('discordLink').href = '#'
-      qs('twitterLink').href = '#'
-      qs('copyReferral').addEventListener('click', ()=>{ navigator.clipboard.writeText(profile.referral||'').then(()=>alert('Referral copied.')) })
-
-      // ====== INITIAL RENDER ======
-      renderMyLicenses(); renderProducts()
-    })();
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('profile');
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    });
   </script>
-
-  <!-- If you prefer to keep logic in a separate file, include your app.js here instead:
-  <script src="assets/js/app.js"></script>
-  -->
 </body>
 </html>

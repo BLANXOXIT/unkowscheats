@@ -2,190 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Dashboard Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Login</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:#0b0b0d;
-      color:#eee;
-    }
-    /* LOGIN SCREEN */
-    #loginScreen {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      background:#000;
-    }
-    .login-box {
-      background:#111;
-      padding:30px;
-      border-radius:10px;
-      width:300px;
-      box-shadow:0 0 20px rgba(0,0,0,.6);
-    }
-    .login-box h2 {
-      margin-top:0;
-      text-align:center;
-    }
-    .login-box input {
-      width:100%;
-      padding:10px;
-      margin:8px 0;
-      border-radius:6px;
-      border:1px solid #333;
-      background:#0b0b0d;
-      color:#eee;
-    }
-    .login-box button {
-      width:100%;
-      padding:10px;
-      margin-top:12px;
-      border:0;
-      border-radius:6px;
-      background:#ff7a7a;
-      color:#fff;
-      cursor:pointer;
-    }
-    .hidden { display:none; }
-
-    /* DASHBOARD */
-    .sidebar {
-      width:220px;
-      padding:20px;
-      background:#111;
-      height:100vh;
-      float:left;
-    }
-    .sidebar h2 { margin:0 0 18px; }
-    .sidebar button {
-      display:block;
-      width:100%;
-      margin:8px 0;
-      padding:10px;
-      border:0;
-      border-radius:8px;
-      background:#222;
-      color:#ddd;
-      cursor:pointer;
-      text-align:left;
-    }
-    .main {
-      margin-left:240px;
-      padding:20px;
-    }
-    .card {
-      background:#1a1a1a;
-      padding:14px;
-      border-radius:10px;
-      margin-bottom:12px;
-    }
-  </style>
 </head>
 <body>
   <!-- LOGIN SCREEN -->
-  <div id="loginScreen">
-    <div class="login-box">
-      <h2>Login</h2>
-      <input type="text" id="loginUsername" placeholder="Username" required />
-      <input type="email" id="loginEmail" placeholder="Email" required />
-      <input type="password" id="loginPassword" placeholder="Password" required />
-      <button id="loginBtn">Let's go!</button>
+  <div id="loginScreen" class="screen">
+    <div class="login-box" role="form" aria-labelledby="loginTitle">
+      <h2 id="loginTitle">Login</h2>
+      <input type="text" id="loginUsername" placeholder="Username" autocomplete="username" />
+      <input type="email" id="loginEmail" placeholder="Email" autocomplete="email" />
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
+      <button id="loginBtn" class="primary">Let's go!</button>
+      <div id="loginError" class="muted" aria-live="polite"></div>
     </div>
   </div>
 
   <!-- DASHBOARD (hidden until login) -->
   <div id="dashboard" class="hidden">
-    <div class="sidebar">
+    <aside class="sidebar" role="navigation" aria-label="Main">
       <h2>Yeageth</h2>
-      <button onclick="showTab('user')">User</button>
-      <button onclick="showTab('products')">Products</button>
-      <button onclick="showTab('license')">Use Key</button>
-      <button onclick="showTab('news')">News</button>
-      <button onclick="showTab('social')">Social</button>
-      <button onclick="showTab('referral')">Referral</button>
-    </div>
+      <nav>
+        <button data-tab="user">User</button>
+        <button data-tab="products">Products</button>
+        <button data-tab="license">Use Key</button>
+        <button data-tab="news">News</button>
+        <button data-tab="social">Social</button>
+        <button data-tab="referral">Referral</button>
+      </nav>
+    </aside>
 
-    <div class="main">
-      <!-- USER TAB -->
-      <div id="user" class="tab">
+    <main class="main" role="main">
+      <section id="user" class="tab">
         <h2>User Profile</h2>
         <div class="card">
           <p><strong>Welcome</strong> <span id="usernameDisplay">—</span></p>
           <p><strong>Email</strong> <span id="emailDisplay">—</span></p>
-          <p><strong>Status</strong> Active</p>
-          <button id="logoutBtn">Logout</button>
+          <p><strong>Status</strong> <span id="statusDisplay">Active</span></p>
+          <div class="actions">
+            <button id="logoutBtn" class="danger">Logout</button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <!-- PRODUCTS TAB -->
-      <div id="products" class="tab" style="display:none;">
+      <section id="products" class="tab hidden">
         <h2>Your Products</h2>
         <div id="productsContainer"></div>
-      </div>
+      </section>
 
-      <!-- LICENSE TAB -->
-      <div id="license" class="tab" style="display:none;">
+      <section id="license" class="tab hidden">
         <h2>Redeem License</h2>
-        <form id="licenseForm">
+        <form id="licenseForm" class="card">
           <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX" required />
-          <button type="submit">Activate Key</button>
+          <button type="submit" class="primary">Activate Key</button>
+          <div id="licenseStatus" class="muted"></div>
         </form>
-        <div id="licenseStatus"></div>
-      </div>
+        <div class="card">
+          <h3>My Licenses</h3>
+          <div id="myLicenses"></div>
+        </div>
+      </section>
 
-      <!-- NEWS TAB -->
-      <div id="news" class="tab" style="display:none;">
+      <section id="news" class="tab hidden">
         <h2>Latest News</h2>
         <div id="newsContainer"></div>
-      </div>
+      </section>
 
-      <!-- SOCIAL TAB -->
-      <div id="social" class="tab" style="display:none;">
+      <section id="social" class="tab hidden">
         <h2>Social</h2>
-        <p>Links to Discord, Twitter, etc.</p>
-      </div>
+        <div class="card">
+          <p>Discord: <a id="discordLink" href="#" target="_blank" rel="noopener">Join</a></p>
+          <p>Twitter: <a id="twitterLink" href="#" target="_blank" rel="noopener">@handle</a></p>
+        </div>
+      </section>
 
-      <!-- REFERRAL TAB -->
-      <div id="referral" class="tab" style="display:none;">
+      <section id="referral" class="tab hidden">
         <h2>Referral</h2>
-        <p>Your referral code: <span id="referralCode">—</span></p>
-      </div>
-    </div>
+        <div class="card">
+          <p>Your referral code: <strong id="referralCode">—</strong></p>
+          <button id="copyReferral">Copy</button>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <script>
-    // Login logic
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const u = document.getElementById('loginUsername').value.trim();
-      const e = document.getElementById('loginEmail').value.trim();
-      const p = document.getElementById('loginPassword').value.trim();
-      if(!u || !e || !p){ alert('Fill all fields'); return; }
-      // Save user info locally
-      localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'}));
-      // Hide login, show dashboard
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      // Show user info
-      document.getElementById('usernameDisplay').textContent = u;
-      document.getElementById('emailDisplay').textContent = e;
-      showTab('user');
-    });
-
-    // Tab switching
-    function showTab(tabId){
-      document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
-      document.getElementById(tabId).style.display='block';
-    }
-
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('profile');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-    });
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

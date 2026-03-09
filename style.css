@@ -1,49 +1,44 @@
 body {
-  background: #0d0d0d;
-  color: #fff;
-  font-family: 'Segoe UI', sans-serif;
-  display: flex;
+  margin: 0;
+  height: 100vh;              /* full viewport height */
+  display: flex;              /* enable flexbox */
+  justify-content: center;    /* center horizontally */
+  align-items: center;        /* center vertically */
+  background: #0b0b0d;        /* dark background */
+  font-family: Arial, sans-serif;
+  color: #eee;
 }
 
-.sidebar {
-  width: 200px;
-  background: #1a1a1a;
-  padding: 20px;
-  box-shadow: 0 0 20px #00ffff;
-}
-
-.sidebar h2 {
-  color: #ff00ff;
-  text-shadow: 0 0 10px #ff00ff;
-}
-
-.sidebar button {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  background: transparent;
-  border: 2px solid #00ffff;
-  color: #00ffff;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 10px #00ffff;
-}
-
-.sidebar button:hover {
-  background: #00ffff;
-  color: #0d0d0d;
-}
-
-.main {
-  flex: 1;
-  padding: 20px;
-}
-
-.card {
-  background: #1a1a1a;
-  padding: 15px;
-  margin: 10px;
+.login-box {
+  background: #111;
+  padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 0 15px #ff00ff;
+  width: 300px;
+  box-shadow: 0 0 20px rgba(0,0,0,.6);
+}
+
+.login-box h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #0b0b0d;
+  color: #eee;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #ff7a7a;
+  color: #fff;
+  cursor: pointer;
 }

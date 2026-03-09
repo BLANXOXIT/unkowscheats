@@ -1,14 +1,13 @@
-body {
-  margin: 0;
-  height: 100vh;              /* full viewport height */
-  display: flex;              /* enable flexbox */
-  justify-content: center;    /* center horizontally */
-  align-items: center;        /* center vertically */
-  background: #0b0b0d;        /* dark background */
-  font-family: Arial, sans-serif;
-  color: #eee;
+/* Make the whole viewport a flex container */
+#loginScreen {
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  height: 100vh;             /* full viewport height */
+  background: #000;          /* dark background */
 }
 
+/* Style the login box itself */
 .login-box {
   background: #111;
   padding: 30px;

@@ -1,43 +1,40 @@
-/* Make the whole viewport a flex container */
-#loginScreen {
-  display: flex;
-  justify-content: center;   /* center horizontally */
-  align-items: center;       /* center vertically */
-  height: 100vh;             /* full viewport height */
-  background: #000;          /* dark background */
+:root{
+  --bg:#070708;
+  --panel:#0f1113;
+  --card:#141518;
+  --muted:#9aa0a6;
+  --accent:#ff7a7a;
+  --accent-2:#ffb86b;
+  --danger:#ff6b6b;
+  --text:#e6eef6;
 }
 
-/* Style the login box itself */
-.login-box {
-  background: #111;
-  padding: 30px;
-  border-radius: 10px;
-  width: 300px;
-  box-shadow: 0 0 20px rgba(0,0,0,.6);
-}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#0b0b0d);color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2)}
+.hidden{display:none}
 
-.login-box h2 {
-  margin-top: 0;
-  text-align: center;
-}
+/* LOGIN SCREEN centered */
+.screen{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px}
+.login-box{width:340px;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);text-align:center}
+.login-box h2{margin:0 0 14px;font-size:20px}
+.login-box input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #222;background:#0b0b0d;color:var(--text)}
+.primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));border:0;color:#0b0b0d;padding:10px 12px;border-radius:8px;cursor:pointer}
+.danger{background:var(--danger);border:0;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+.muted{color:var(--muted);font-size:13px;margin-top:8px}
 
-.login-box input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #0b0b0d;
-  color: #eee;
-}
+/* DASHBOARD layout */
+#dashboard{display:flex;min-height:100vh}
+.sidebar{width:220px;padding:20px;background:var(--panel);box-shadow:2px 0 30px rgba(0,0,0,.6)}
+.sidebar h2{margin:0 0 18px;font-size:18px}
+.sidebar nav button{display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:0;background:#111;color:var(--text);text-align:left;cursor:pointer}
+.main{flex:1;padding:28px;overflow:auto}
+.card{background:var(--card);padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.tab{max-width:980px}
 
-.login-box button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 12px;
-  border: 0;
-  border-radius: 6px;
-  background: #ff7a7a;
-  color: #fff;
-  cursor: pointer;
+/* Responsive */
+@media (max-width:900px){
+  .sidebar{display:none}
+  .main{margin:0;padding:16px}
+  #dashboard{flex-direction:column}
 }

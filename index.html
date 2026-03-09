@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login then Dashboard Demo</title>
+  <title>Login → Dashboard (single file)</title>
   <style>
-    :root{--bg:#070708;--panel:#0f1113;--card:#141518;--muted:#9aa0a6;--accent:#ff7a7a;--text:#e6eef6}
-    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0b0d);color:var(--text)}
+    :root{
+      --bg:#070708; --panel:#0f1113; --card:#141518; --muted:#9aa0a6;
+      --accent:#ff7a7a; --accent-2:#ffb86b; --text:#e6eef6;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0b0d);color:var(--text)}
     /* Centered login */
     #loginScreen{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px}
-    .login-box{width:340px;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);text-align:center}
+    .login-box{width:360px;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);text-align:center}
     .login-box h2{margin:0 0 14px;font-size:20px}
-    .login-box input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #222;background:#0b0b0d;color:var(--text)}
-    .primary{background:linear-gradient(90deg,#ffb86b,#ff7a7a);border:0;color:#0b0b0d;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .login-box input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #222;background:#0b0b0d;color:var(--text);font-size:14px}
+    .primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));border:0;color:#0b0b0d;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700}
     .muted{color:var(--muted);font-size:13px;margin-top:8px}
     .hidden{display:none}
     /* Dashboard */
@@ -22,6 +25,11 @@
     .sidebar nav button{display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:0;background:#111;color:var(--text);text-align:left;cursor:pointer}
     .main{flex:1;padding:28px;overflow:auto}
     .card{background:var(--card);padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+    .small{font-size:13px;color:var(--muted)}
+    /* debug console */
+    #debug{position:fixed;right:12px;bottom:12px;width:320px;max-height:40vh;overflow:auto;background:rgba(0,0,0,0.6);padding:8px;border-radius:8px;font-family:monospace;font-size:12px;color:#cfe8ff;box-shadow:0 6px 20px rgba(0,0,0,.6)}
+    #debug h4{margin:0 0 6px;font-size:12px;color:#fff}
+    @media (max-width:900px){.sidebar{display:none}.main{padding:16px}}
   </style>
 </head>
 <body>
@@ -45,6 +53,7 @@
         <button data-tab="user">User</button>
         <button data-tab="products">Products</button>
         <button data-tab="license">Use Key</button>
+        <button data-tab="news">News</button>
       </nav>
     </aside>
 
@@ -69,88 +78,175 @@
         <form id="licenseForm" class="card">
           <input id="licenseKey" type="text" placeholder="XXXXX-XXXXX-XXXXX" />
           <button type="submit" class="primary">Activate Key</button>
-          <div id="licenseStatus" class="muted"></div>
+          <div id="licenseStatus" class="small"></div>
         </form>
+        <div class="card"><h3>My Licenses</h3><div id="myLicenses">No licenses yet.</div></div>
       </section>
+
+      <section id="news" class="tab hidden"><h2>Latest News</h2><div class="card">No news.</div></section>
     </main>
   </div>
 
+  <!-- small debug panel so you can see what's happening -->
+  <div id="debug" aria-hidden="false">
+    <h4>Debug</h4>
+    <div id="debugLog">ready</div>
+  </div>
+
   <script>
-    // This script waits for DOM and logs everything so you can see what's happening
-    document.addEventListener('DOMContentLoaded', function () {
-      console.log('DOM ready');
+    (function(){
+      const dbg = (msg) => {
+        const el = document.getElementById('debugLog');
+        el.innerHTML = (new Date()).toLocaleTimeString() + ' — ' + msg + '<br/>' + el.innerHTML;
+        console.log(msg);
+      };
 
-      const ids = ['loginBtn','loginUsername','loginEmail','loginPassword','loginScreen','dashboard','usernameDisplay','emailDisplay','logoutBtn'];
-      const exist = ids.map(id => [id, !!document.getElementById(id)]);
-      console.log('Element existence check:', exist);
+      document.addEventListener('DOMContentLoaded', () => {
+        dbg('DOM loaded');
 
-      const loginBtn = document.getElementById('loginBtn');
-      const loginScreen = document.getElementById('loginScreen');
-      const dashboard = document.getElementById('dashboard');
-      const usernameInput = document.getElementById('loginUsername');
-      const emailInput = document.getElementById('loginEmail');
-      const passwordInput = document.getElementById('loginPassword');
-      const usernameDisplay = document.getElementById('usernameDisplay');
-      const emailDisplay = document.getElementById('emailDisplay');
-      const logoutBtn = document.getElementById('logoutBtn');
+        // Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const usernameInput = document.getElementById('loginUsername');
+        const emailInput = document.getElementById('loginEmail');
+        const passwordInput = document.getElementById('loginPassword');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const emailDisplay = document.getElementById('emailDisplay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const sidebarButtons = document.querySelectorAll('.sidebar nav button');
+        const tabs = document.querySelectorAll('.tab');
+        const licenseForm = document.getElementById('licenseForm');
+        const licenseStatus = document.getElementById('licenseStatus');
+        const myLicenses = document.getElementById('myLicenses');
+        const productsContainer = document.getElementById('productsContainer');
 
-      if (!loginBtn) {
-        console.error('loginBtn not found. Check HTML ids and that this file is the one loaded.');
-        return;
-      }
+        // quick existence check
+        const ids = ['loginBtn','loginUsername','loginEmail','loginPassword','loginScreen','dashboard','usernameDisplay','emailDisplay'];
+        dbg('Existence: ' + JSON.stringify(ids.map(id => [id, !!document.getElementById(id)])));
 
-      // Attach handler and confirm in console
-      loginBtn.addEventListener('click', function () {
-        console.log('loginBtn clicked');
-        const u = usernameInput.value.trim();
-        const e = emailInput.value.trim();
-        const p = passwordInput.value.trim();
-        console.log('input values', {u,e,p});
-        if (!u || !e || !p) {
-          document.getElementById('loginError').textContent = 'Fill all fields';
-          console.warn('Missing fields');
-          return;
-        }
-        // Save profile and show dashboard
-        try { localStorage.setItem('profile', JSON.stringify({username:u,email:e,status:'Active'})); } catch (err) { console.warn('localStorage failed', err); }
-        loginScreen.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-        dashboard.setAttribute('aria-hidden','false');
-        usernameDisplay.textContent = u;
-        emailDisplay.textContent = e;
-        console.log('Dashboard shown');
-      });
+        // state
+        let profile = null;
+        let licenses = [];
 
-      // Logout
-      logoutBtn.addEventListener('click', function () {
-        console.log('logout clicked');
-        localStorage.removeItem('profile');
-        dashboard.classList.add('hidden');
-        loginScreen.classList.remove('hidden');
-      });
-
-      // Simple tab switching
-      document.querySelectorAll('.sidebar nav button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
-          const id = btn.dataset.tab;
-          const el = document.getElementById(id);
-          if (el) el.classList.remove('hidden');
+        // attach handlers (safe: DOM ready)
+        loginBtn.addEventListener('click', () => {
+          dbg('loginBtn clicked');
+          const u = (usernameInput.value || '').trim();
+          const e = (emailInput.value || '').trim();
+          const p = (passwordInput.value || '').trim();
+          if(!u || !e || !p){
+            document.getElementById('loginError').textContent = 'Fill all fields';
+            dbg('missing fields');
+            return;
+          }
+          profile = { username: u, email: e, status: 'Active', referral: 'REF-' + Math.random().toString(36).slice(2,9).toUpperCase() };
+          try { localStorage.setItem('profile', JSON.stringify(profile)); dbg('profile saved to localStorage'); } catch (err) { dbg('localStorage failed'); }
+          showDashboard();
         });
-      });
 
-      // Auto-show dashboard if profile exists
-      try {
-        const stored = JSON.parse(localStorage.getItem('profile') || 'null');
-        if (stored && stored.username) {
-          console.log('Found stored profile, auto-showing dashboard for', stored.username);
-          usernameDisplay.textContent = stored.username;
-          emailDisplay.textContent = stored.email || '';
+        logoutBtn.addEventListener('click', () => {
+          dbg('logout clicked');
+          profile = null;
+          localStorage.removeItem('profile');
+          showLogin();
+        });
+
+        sidebarButtons.forEach(btn => btn.addEventListener('click', () => openTab(btn.dataset.tab)));
+
+        if(licenseForm){
+          licenseForm.addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const key = (document.getElementById('licenseKey').value || '').trim();
+            if(!key){ licenseStatus.textContent = 'Enter a key'; dbg('no key'); return; }
+            const obj = { key, product: 'Unknown', status: 'ACTIVE', created: new Date().toISOString().split('T')[0], author: profile ? profile.username : 'guest', tier: /PRO/i.test(key) ? 'PRO' : 'FREE', features: /PRO/i.test(key) ? ['Aimbot (fast)','Wallhack','Custom UI'] : ['Basic features'] };
+            licenses.unshift(obj);
+            try { localStorage.setItem('licenses', JSON.stringify(licenses)); } catch {}
+            licenseStatus.textContent = 'Stored locally (' + obj.tier + ')';
+            renderMyLicenses();
+            renderProducts();
+            licenseForm.reset();
+            dbg('license stored: ' + key);
+          });
+        }
+
+        // render helpers
+        function renderMyLicenses(){
+          myLicenses.innerHTML = '';
+          if(!licenses.length){ myLicenses.textContent = 'No licenses yet.'; return; }
+          licenses.forEach(l => {
+            const d = document.createElement('div');
+            d.className = 'card';
+            d.style.marginBottom = '8px';
+            d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${l.product}</strong></div><div>${l.tier==='PRO'?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>'}</div></div><div><strong>Key</strong>: ${l.key}</div><div><strong>Status</strong>: ${l.status}</div><div style="margin-top:8px;"><strong>Features</strong><ul>${(l.features||[]).map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+            myLicenses.appendChild(d);
+          });
+        }
+
+        function renderProducts(){
+          productsContainer.innerHTML = '';
+          if(!licenses.length){ productsContainer.innerHTML = '<div class="card">No active products. Redeem a license in Use Key.</div>'; return; }
+          const byProduct = {};
+          licenses.forEach(l => { const p = l.product || 'Unknown'; (byProduct[p] = byProduct[p] || []).push(l); });
+          Object.keys(byProduct).forEach(prod => {
+            const items = byProduct[prod];
+            const isPro = items.some(i => i.tier === 'PRO');
+            const card = document.createElement('div'); card.className = 'card'; if(isPro) card.style.border = '2px solid #ffd700';
+            card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${prod}</h3>${isPro?'<span style="background:#ffd700;color:#000;padding:6px 10px;border-radius:6px;font-weight:700">PRO</span>':'<span style="color:#0f0">FREE</span>'}</div><p><strong>Licenses:</strong> ${items.length}</p>`;
+            const list = document.createElement('div'); list.style.marginTop = '8px';
+            items.forEach(i => {
+              const r = document.createElement('div'); r.style.margin = '8px 0';
+              r.innerHTML = `<div><strong>Key:</strong> ${i.key}</div><div><strong>Status:</strong> ${i.status}</div><div><strong>Activated:</strong> ${i.created}</div>`;
+              if(i.tier === 'PRO'){ const feat = document.createElement('div'); feat.style.marginTop='6px'; feat.innerHTML = `<strong style="color:#ffd700">PRO Features</strong><ul>${(i.features||[]).map(f=>`<li>${f}</li>`).join('')}</ul>`; r.appendChild(feat); }
+              list.appendChild(r);
+            });
+            card.appendChild(list);
+            productsContainer.appendChild(card);
+          });
+        }
+
+        // UI helpers
+        function openTab(id){
+          tabs.forEach(t => t.classList.add('hidden'));
+          const el = document.getElementById(id);
+          if(el) el.classList.remove('hidden');
+        }
+
+        function showDashboard(){
+          dbg('showDashboard');
+          // load stored licenses if any
+          try { licenses = JSON.parse(localStorage.getItem('licenses') || '[]'); } catch(e){ licenses = []; }
           loginScreen.classList.add('hidden');
           dashboard.classList.remove('hidden');
+          dashboard.setAttribute('aria-hidden','false');
+          usernameDisplay.textContent = profile.username;
+          emailDisplay.textContent = profile.email;
+          renderMyLicenses();
+          renderProducts();
+          openTab('user');
         }
-      } catch (err) { console.warn('Error reading stored profile', err); }
-    });
+
+        function showLogin(){
+          dbg('showLogin');
+          loginScreen.classList.remove('hidden');
+          dashboard.classList.add('hidden');
+          dashboard.setAttribute('aria-hidden','true');
+        }
+
+        // auto-login if profile exists
+        try {
+          const stored = JSON.parse(localStorage.getItem('profile') || 'null');
+          if(stored && stored.username){
+            profile = stored;
+            dbg('auto-login found: ' + profile.username);
+            showDashboard();
+          } else {
+            dbg('no stored profile');
+            showLogin();
+          }
+        } catch(err){ dbg('error reading profile'); showLogin(); }
+      });
+    })();
   </script>
 </body>
 </html>

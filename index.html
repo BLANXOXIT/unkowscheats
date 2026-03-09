@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <div class="sidebar">
-    <h2>Yeageth</h2>
+    <h2>Unknows</h2>
     <button onclick="showTab('user')">User</button>
     <button onclick="showTab('products')">Products</button>
     <button onclick="showTab('license')">Use Key</button>
@@ -16,52 +17,81 @@
   </div>
 
   <div class="main">
-    <!-- User Tab -->
+    <!-- USER TAB -->
     <div id="user" class="tab">
       <h2>User Profile</h2>
-      <p>Welcome <span id="username">blanco</span></p>
-      <p>Email: abdouthegoat06@gmail.com</p>
-      <p>Status: Active</p>
-      <button>Reset HWID</button>
-      <button>Change Password</button>
-      <button>Logout</button>
+
+      <div class="card">
+        <label><strong>Username</strong></label>
+        <input id="inputUsername" placeholder="Enter username" />
+        <label><strong>Email</strong></label>
+        <input id="inputEmail" placeholder="Enter email" />
+        <div style="text-align:center; margin-top:10px;">
+          <button id="saveProfileBtn">Save Profile</button>
+        </div>
+      </div>
+
+      <div class="card" id="profileDisplay" style="margin-top:20px;">
+        <h3>Profile</h3>
+        <p><strong>Welcome</strong> <span id="usernameDisplay">—</span></p>
+        <p><strong>Email</strong> <span id="emailDisplay">—</span></p>
+        <p><strong>HWID</strong> <span id="hwidDisplay">Not Set</span></p>
+        <p><strong>Status</strong> <span id="statusDisplay">Inactive</span></p>
+        <div>
+          <button id="resetHwidBtn">Reset HWID</button>
+          <button id="changePassBtn">Change Password</button>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Products Tab -->
+    <!-- PRODUCTS TAB -->
     <div id="products" class="tab" style="display:none;">
       <h2>Your Products</h2>
-      <div class="card">CS2-ESP — ACTIVE <button>Download</button><button>UI</button></div>
-      <div class="card">Valorant — ACTIVE <button>Download</button><button>UI</button></div>
-      <div class="card">Marvel Rivals — ACTIVE <button>Download</button></div>
-      <div class="card">Valai — ACTIVE <button>Download</button></div>
+      <div id="productsContainer"></div>
     </div>
 
-    <!-- License Tab -->
+    <!-- LICENSE TAB -->
     <div id="license" class="tab" style="display:none;">
       <h2>Redeem License</h2>
-      <form id="licenseForm">
-        <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX" required>
-        <button type="submit">Activate Key</button>
-      </form>
-      <div id="licenseStatus"></div>
+
+      <div class="card">
+        <form id="licenseForm">
+          <label><strong>License Key</strong></label>
+          <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX" required />
+          <label><strong>Product (optional)</strong></label>
+          <input type="text" id="licenseProduct" placeholder="Product name (e.g. CS2-ESP)" />
+          <div style="text-align:center; margin-top:10px;">
+            <button type="submit">Activate Key</button>
+          </div>
+        </form>
+        <div id="licenseStatus" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h3>My Licenses</h3>
+        <div id="myLicenses"></div>
+      </div>
     </div>
 
-    <!-- News Tab -->
+    <!-- NEWS TAB -->
     <div id="news" class="tab" style="display:none;">
       <h2>Latest News</h2>
       <div id="newsContainer"></div>
     </div>
 
-    <!-- Social Tab -->
+    <!-- SOCIAL TAB -->
     <div id="social" class="tab" style="display:none;">
       <h2>Social</h2>
-      <p>Links to Discord, Twitter, etc.</p>
+      <p>Discord: <a id="discordLink" href="#" target="_blank">Join</a></p>
+      <p>Twitter: <a id="twitterLink" href="#" target="_blank">@handle</a></p>
     </div>
 
-    <!-- Referral Tab -->
+    <!-- REFERRAL TAB -->
     <div id="referral" class="tab" style="display:none;">
       <h2>Referral</h2>
-      <p>Invite friends and earn rewards.</p>
+      <p>Your referral code: <span id="referralCode">—</span></p>
+      <button id="copyReferral">Copy</button>
     </div>
   </div>
 
